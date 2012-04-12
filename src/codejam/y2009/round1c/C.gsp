@@ -112,6 +112,6 @@ var sampleInput = {
 }.join("\n")
 
 
-//solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
-solveAll(new FileReader("C-small-practice.in"), new FileWriter("C-small-practice.out"))
-solveAll(new FileReader("C-large-practice.in"), new FileWriter("C-large-practice.out"))
+solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
+//solveAll(new FileReader("C-small-practice.in"), new FileWriter("C-small-practice.out"))
+//solveAll(new FileReader("C-large-practice.in"), new FileWriter("C-large-practice.out"))

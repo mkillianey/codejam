@@ -90,6 +90,6 @@ var sampleInput = {
 }.join("\n")
 
 
-//solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
-solveAll(new FileReader("B-small-practice.in"), new FileWriter("B-small-practice.out"))
-solveAll(new FileReader("B-large-practice.in"), new FileWriter("B-large-practice.out"))
+solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
+//solveAll(new FileReader("B-small-practice.in"), new FileWriter("B-small-practice.out"))
+//solveAll(new FileReader("B-large-practice.in"), new FileWriter("B-large-practice.out"))

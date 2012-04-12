@@ -1,31 +1,6 @@
-uses java.io.FileWriter
-
-uses java.io.OutputStreamWriter
-
-uses java.lang.System
-
-uses java.io.BufferedWriter
-
-uses java.util.LinkedList
-
-uses gw.internal.gosu.parser.java.JavaParser.enumBody_return
-
-uses java.io.Writer
-
-uses java.io.FileReader
-
-uses java.lang.Integer
-
-uses java.util.Map
-
-uses java.util.ArrayList
-
-uses java.io.BufferedReader
-uses java.io.Reader
-uses java.io.StringReader
-
-uses java.util.concurrent.atomic.AtomicInteger
-uses java.util.HashMap
+uses java.io.*
+uses java.lang.*
+uses java.util.*
 
 var sampleInput = {
 "2",
@@ -43,13 +18,15 @@ var sampleInput = {
 ""}.join("\n")
 
 
-
 var timeStringToInt = \ s : String -> {
   var times = s.split(":").map( \ elt -> elt.toInt())
   return times[0] * 60 + times[1]
 }
 
-enum Direction { A_TO_B, B_TO_A; }
+enum Direction {
+  A_TO_B,
+  B_TO_A;
+}
 
 class Trip {
   var _start : int as StartTime
@@ -137,6 +114,6 @@ function solveAll(input : Reader, output : Writer) {
   bw.close()
 }
 
-//solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
-solveAll(new FileReader("B-small-practice.in"), new FileWriter("B-small-practice.out"))
-solveAll(new FileReader("B-large-practice.in"), new FileWriter("B-large-practice.out"))
+solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
+//solveAll(new FileReader("B-small-practice.in"), new FileWriter("B-small-practice.out"))
+//solveAll(new FileReader("B-large-practice.in"), new FileWriter("B-large-practice.out"))

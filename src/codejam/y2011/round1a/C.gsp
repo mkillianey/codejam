@@ -156,8 +156,8 @@ var sampleInput2 = { "1",
 }.join("\n")
 
 
-// solve(new BufferedReader(new InputStreamReader(System.in)), new OutputStreamWriter(System.out))
+//solve(new BufferedReader(new InputStreamReader(System.in)), new OutputStreamWriter(System.out))
 solve(new StringReader(sampleInput1), new OutputStreamWriter(System.out))
 solve(new StringReader(sampleInput2), new OutputStreamWriter(System.out))
-solve(new FileReader("C-small-practice.in"), new FileWriter("C-small-practice.out"))
-solve(new FileReader("C-large-practice.in"), new FileWriter("C-large-practice.out"))
+//solve(new FileReader("C-small-practice.in"), new FileWriter("C-small-practice.out"))
+//solve(new FileReader("C-large-practice.in"), new FileWriter("C-large-practice.out"))

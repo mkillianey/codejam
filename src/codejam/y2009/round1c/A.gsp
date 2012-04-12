@@ -42,6 +42,6 @@ function solveAll(input : Reader, output : Writer) {
   writer.close()
 }
 
-//solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
-solveAll(new FileReader("A-small-practice.in"), new FileWriter("A-small-practice.out"))
-solveAll(new FileReader("A-large-practice.in"), new FileWriter("A-large-practice.out"))
+solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
+//solveAll(new FileReader("A-small-practice.in"), new FileWriter("A-small-practice.out"))
+//solveAll(new FileReader("A-large-practice.in"), new FileWriter("A-large-practice.out"))

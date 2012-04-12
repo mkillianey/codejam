@@ -1,19 +1,7 @@
-uses java.io.Writer
+uses java.io.*
+uses java.lang.*
+uses java.util.*
 
-uses java.io.FileReader
-
-uses java.lang.Integer
-
-uses java.util.Map
-
-uses java.util.ArrayList
-
-uses java.io.BufferedReader
-uses java.io.Reader
-uses java.io.StringReader
-
-uses java.util.concurrent.atomic.AtomicInteger
-uses java.util.HashMap
 
 var sampleInput = {
 "2",
@@ -86,6 +74,6 @@ function solveAll(input : Reader) {
   }
 }
 
-//solveAll(new StringReader(sampleInput))
+solveAll(new StringReader(sampleInput))
 //solveAll(new FileReader("A-small-practice.in"))
-solveAll(new FileReader("A-large-practice.in"))
+//solveAll(new FileReader("A-large-practice.in"))
