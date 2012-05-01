@@ -71,11 +71,15 @@ abstract class BaseSolver {
     }
     var outputFile = new File(outputFilename)
     if (outputFile.exists()) {
-      outputFile.delete()
-    }
-    if (inputFile.lastModified() < outputFile.lastModified()) {
-      print("Skipping ${inputFilename} because existing output file ${outputFilename} is newer")
-      return
+      if (inputFile.lastModified() < outputFile.lastModified()) {
+        print("Skipping ${inputFilename} because existing output file ${outputFilename} is newer")
+        return
+      }
+      if (outputFile.delete()) {
+        print("Deleting output file ${outputFile} and regenerating solution")
+      } else {
+        throw new IOException("Can't delete file ${outputFile}")
+      }
     }
     using (var reader = new BufferedReader(new FileReader(inputFile))) {
       using (var writer = new BufferedWriter(new FileWriter(outputFile))) {
