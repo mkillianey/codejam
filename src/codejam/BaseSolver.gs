@@ -10,8 +10,10 @@ uses java.util.*
  * Extend this class and implement {@link #solveOneCase(java.io.BufferedReader}.
  */
 abstract class BaseSolver {  
-  
+
+  var _newLine : String
   construct( ) {
+    _newLine = System.getProperty("line.separator")
   }
   
   abstract function solveOneCase(reader : BufferedReader) : String
@@ -47,7 +49,7 @@ abstract class BaseSolver {
       var endTime = System.currentTimeMillis()
       print("Case #${i} (${endTime-startTime} milliseconds): ${solution}")
       if (writer != null) {
-        writer.write("Case #${i}: ${solution}\n")
+        writer.write("Case #${i}: ${solution}${_newLine}")
         writer.flush()
       }
       i++
