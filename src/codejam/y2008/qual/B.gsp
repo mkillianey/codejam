@@ -1,27 +1,12 @@
-uses java.io.*
-uses java.lang.*
-uses java.util.*
+classpath "../../.."
 
-var sampleInput = {
-"2",
-"5",
-"3 2",
-"09:00 12:00",
-"10:00 13:00",
-"11:00 12:30",
-"12:02 15:00",
-"09:00 10:30",
-"2",
-"2 0",
-"09:00 09:01",
-"12:00 12:02",
-""}.join("\n")
+// Solution for Google code jam 2008 Qualification Round Problem B. Train Timetable
+// http://code.google.com/codejam/contest/32013/dashboard#s=p1
 
-
-var timeStringToInt = \ s : String -> {
-  var times = s.split(":").map( \ elt -> elt.toInt())
-  return times[0] * 60 + times[1]
-}
+uses codejam.SolutionRunner
+uses java.io.BufferedReader
+uses java.io.StringReader
+uses java.util.List
 
 enum Direction {
   A_TO_B,
@@ -32,11 +17,6 @@ class Trip {
   var _start : int as StartTime
   var _end : int as EndTime
   var _direction : Direction as Direction
-  construct (start : int, end : int, direction : Direction) {
-    this._start = start
-    this._end = end
-    this._direction = direction
-  }
   override function toString() : String {
     return "${Direction}: ${StartTime}-${EndTime}"
   }
@@ -44,76 +24,87 @@ class Trip {
 
 function solve(turnaroundTime : int, trips : List<Trip>) : String {
   trips.sortBy( \ elt -> elt.StartTime )
-  var startedAtA = 0
-  var startedAtB = 0
+  var numTrainsThatStartedAtA = 0
+  var numTrainsThatStartedAtB = 0
 
-  var departedTrips : List<Trip> = new ArrayList<Trip>()
-  var readyAtA = 0
-  var readyAtB = 0
+  var tripsEnRoute : List<Trip> = {}
+  var readyToLeaveFromA = 0
+  var readyToLeaveFromB = 0
 
-  while (!trips.Empty) {
-    var tripToSchedule = trips.remove(0)
+  for (tripToSchedule in trips) {
     var departureTime = tripToSchedule.StartTime
 
     // Find out which trains have arrived
-    var iter = departedTrips.iterator()
-    while (iter.hasNext()) {
-      var departedTrip = iter.next()
-      if (departedTrip.EndTime + turnaroundTime <= departureTime) {
-        if (departedTrip.Direction == A_TO_B) {
-          readyAtB += 1
+    for (tripEnRoute in tripsEnRoute iterator tripEnRouteIterator) {
+      if (tripEnRoute.EndTime + turnaroundTime <= departureTime) {
+        if (tripEnRoute.Direction == A_TO_B) {
+          readyToLeaveFromB += 1
         } else {
-          readyAtA += 1
+          readyToLeaveFromA += 1
         }
-        iter.remove()
+        tripEnRouteIterator.remove()
       }
     }
 
-    // If no train is ready, add one to the trains that were present at the
-    // start
+    // If a train is ready, use it, else add one to the trains that originally started at the station
     if (tripToSchedule.Direction == A_TO_B) {
-      if (readyAtA < 1) {
-        startedAtA += 1
+      if (readyToLeaveFromA < 1) {
+        numTrainsThatStartedAtA += 1
       } else {
-        readyAtA -= 1
+        readyToLeaveFromA -= 1
       }
     } else {
-      if (readyAtB < 1) {
-        startedAtB += 1
+      if (readyToLeaveFromB < 1) {
+        numTrainsThatStartedAtB += 1
       } else {
-        readyAtB -= 1
+        readyToLeaveFromB -= 1
       }
     }
 
-    departedTrips.add(tripToSchedule)
+    tripsEnRoute.add(tripToSchedule)
   }
 
-  return "${startedAtA} ${startedAtB}"
+  return "${numTrainsThatStartedAtA} ${numTrainsThatStartedAtB}"
 }
 
-function solveAll(input : Reader, output : Writer) {
-  var br = new BufferedReader(input)
-  var bw = new BufferedWriter(output)
-  var numCases = br.readLine().toInt()
-  for (var index in 1..numCases) {
-    var turnaroundTime = br.readLine().toInt()
-    var numTrips = br.readLine().split(" ").map(\ s -> s.toInt())
+var runner = SolutionRunner.from( \ reader -> {
+    var stringToTime = \ s : String -> {
+          var times = s.split(":").map( \ elt -> elt.toInt())
+          return times[0] * 60 + times[1]
+        }
+    var turnaroundTimeInMinutes = reader.readLine().toInt()
+    var numTrips = reader.readLine().split(" ").map(\ s -> s.toInt())
+    var numTripsFromAToB = numTrips[0]
+    var numTripsFromBToA = numTrips[1]
     var trips : List<Trip> = {}
-    for (var _ in 0..|numTrips[0]) {
-      var times = br.readLine().split(" ").map( timeStringToInt )
-      trips.add(new Trip(times[0], times[1], A_TO_B ))
+    for (var _ in 0..|numTripsFromAToB) {
+      var times = reader.readLine().split(" ").map( stringToTime )
+      var tripFromAToB = new Trip() { :StartTime = times[0], :EndTime = times[1], :Direction = A_TO_B }
+      trips.add(tripFromAToB)
     }
-    for (var _ in 0..|numTrips[1]) {
-      var times = br.readLine().split(" ").map( timeStringToInt )
-      trips.add(new Trip(times[0], times[1], B_TO_A ))
+    for (var _ in 0..|numTripsFromBToA) {
+      var times = reader.readLine().split(" ").map( stringToTime )
+      var tripFromBToA = new Trip() { :StartTime = times[0], :EndTime = times[1], :Direction = B_TO_A }
+      trips.add(tripFromBToA)
     }
-    bw.write("Case #${index}: ${solve(turnaroundTime, trips)}")
-    bw.newLine()
-  }
-  bw.flush()
-  bw.close()
-}
+    return solve(turnaroundTimeInMinutes, trips)
+})
 
-solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
-//solveAll(new FileReader("B-small-practice.in"), new FileWriter("B-small-practice.out"))
-//solveAll(new FileReader("B-large-practice.in"), new FileWriter("B-large-practice.out"))
+var sampleInput = new StringReader({
+    "2",
+    "5",
+    "3 2",
+    "09:00 12:00",
+    "10:00 13:00",
+    "11:00 12:30",
+    "12:02 15:00",
+    "09:00 10:30",
+    "2",
+    "2 0",
+    "09:00 09:01",
+    "12:00 12:02",
+    ""}.join("\n"))
+
+
+runner.solveAll(sampleInput)
+runner.pollDirectory(:prefix = "B")
