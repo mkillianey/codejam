@@ -1,28 +1,38 @@
+classpath "../../.."
+
 // Solution for 2009 Round 1C Problem A "All Your Base"
 // http://code.google.com/codejam/contest/189252/dashboard#s=p0
 
-uses java.io.*
-uses java.lang.*
-uses java.util.*
+uses codejam.SolutionRunner
+uses java.io.BufferedReader
+uses java.io.StringReader
+uses java.lang.Character
+uses java.lang.Integer
+uses java.lang.Math
+uses java.util.LinkedHashSet
+uses java.util.Map
 
-var sampleInput = {
+var sampleInput = new StringReader({
     "3",
     "11001001",
     "cats",
     "zig",
     ""
-}.join("\n")
+}.join("\n"))
 
 
 function solve(symbol : String) : String {
   var chars = symbol.toCharArray()
-  var uniqueChars = new LinkedHashSet<Character>(chars.toList())
+  var uniqueChars = new LinkedHashSet<Character>(chars.toList()).toList()
   var base = Math.max(uniqueChars.size(), 2) // base must be at least 2
-  var assignOrder = {1, 0}  // leftmost character can't be 0
-  assignOrder.addAll((2..|base).toList())
   var charToValue : Map<Character, Integer> = {}
   for (ch in uniqueChars index i) {
-    charToValue[ch] = assignOrder[i]
+    charToValue[ch] = i
+  }
+  // can't start with 0, so first character is 1, second character is 0
+  charToValue[uniqueChars[0]] = 1
+  if (uniqueChars.size() > 1) {
+    charToValue[uniqueChars[1]] = 0 //
   }
   var result : long = 0
   for (ch in chars) {
@@ -31,17 +41,10 @@ function solve(symbol : String) : String {
   return result as String
 }
 
-function solveAll(input : Reader, output : Writer) {
-  var reader = new BufferedReader(input)
-  var writer = new BufferedWriter(output)
-  for (i in 1..reader.readLine().toInt()) {
-    writer.write("Case #${i}: ${solve(reader.readLine())}")
-    writer.newLine()
-  }
-  writer.flush()
-  writer.close()
-}
+var runner = SolutionRunner.from( \ reader -> {
+  var symbol = reader.readLine().trim()
+  return solve(symbol)
+})
 
-solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
-//solveAll(new FileReader("A-small-practice.in"), new FileWriter("A-small-practice.out"))
-//solveAll(new FileReader("A-large-practice.in"), new FileWriter("A-large-practice.out"))
+runner.solveAll(sampleInput)
+runner.pollDirectory(:prefix = "A")
