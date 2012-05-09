@@ -1,47 +1,53 @@
-uses java.io.*
-uses java.lang.*
-uses java.util.*
+classpath "../../.."
+
+// Solution for Google code jam 2008 Qualification Round Problem A: Saving the Universe
+// http://code.google.com/codejam/contest/32013/dashboard#s=p0
+
+uses codejam.SolutionRunner
+uses java.io.BufferedReader
+uses java.io.StringReader
+uses java.lang.Integer
 
 
-var sampleInput = {
-"2",
-"5",
-"Yeehaw",
-"NSM",
-"Dont Ask",
-"B9",
-"Googol",
-"10",
-"Yeehaw",
-"Yeehaw",
-"Googol",
-"B9",
-"Googol",
-"NSM",
-"B9",
-"NSM",
-"Dont Ask",
-"Googol",
-"5",
-"Yeehaw",
-"NSM",
-"Dont Ask",
-"B9",
-"Googol",
-"7",
-"Googol",
-"Dont Ask",
-"NSM",
-"NSM",
-"Yeehaw",
-"Yeehaw",
-"Googol",
-""}.join("\n")
+var sampleInput = new StringReader({
+    "2",
+    "5",
+    "Yeehaw",
+    "NSM",
+    "Dont Ask",
+    "B9",
+    "Googol",
+    "10",
+    "Yeehaw",
+    "Yeehaw",
+    "Googol",
+    "B9",
+    "Googol",
+    "NSM",
+    "B9",
+    "NSM",
+    "Dont Ask",
+    "Googol",
+    "5",
+    "Yeehaw",
+    "NSM",
+    "Dont Ask",
+    "B9",
+    "Googol",
+    "7",
+    "Googol",
+    "Dont Ask",
+    "NSM",
+    "NSM",
+    "Yeehaw",
+    "Yeehaw",
+    "Googol",
+    ""}.join("\n"))
 
 
 
 function solve(engines : List<String>, queries : List<String>) : String {
-  var switchesPerEngine = new HashMap<String, Integer>()
+  var switchesPerEngine = { "example" -> 0 }
   for (var engine in engines) {
     switchesPerEngine.put(engine, 0);
   }
@@ -55,25 +61,19 @@ function solve(engines : List<String>, queries : List<String>) : String {
   return "${switchesPerEngine.Values.min()}"
 }
 
-function solveAll(input : Reader) {
-  var br = new BufferedReader(input)
-  var numCases = br.readLine().toInt()
-  for (var index in 1..numCases) {
-    var numEngines = br.readLine().toInt()
+var runner = SolutionRunner.from( \ reader -> {
+    var numEngines = reader.readLine().toInt()
     var engines : List<String> = {}
     for (var _ in 0..|numEngines) {
-      engines.add(br.readLine().trim())
+      engines.add(reader.readLine().trim())
     }
-    var numQueries = br.readLine().toInt()
+    var numQueries = reader.readLine().toInt()
     var queries : List<String>  = {}
     for (var _ in 0..|numQueries) {
-      queries.add(br.readLine().trim())
+      queries.add(reader.readLine().trim())
     }
+    return solve(engines, queries)
+  })
 
-    print ("Case #${index}: ${solve(engines, queries)}")
-  }
-}
-
-solveAll(new StringReader(sampleInput))
-//solveAll(new FileReader("A-small-practice.in"))
-//solveAll(new FileReader("A-large-practice.in"))
+runner.solveAll(sampleInput)
+runner.pollDirectory(:prefix = "A")
