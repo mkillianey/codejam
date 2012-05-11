@@ -1,34 +1,51 @@
 classpath "../../.."
 
-// Source for BaseSolver is at:
-// https://github.com/mkillianey/codejam/blob/f86a21b9d8eb8a8c7ae3fa77db5e2714e68d0cf8/src/codejam/BaseSolver.gs
-uses codejam.BaseSolver
-uses java.io.*
-uses java.lang.*
-uses java.util.*
+// Source for SolutionRunner is at:
+// https://github.com/mkillianey/codejam
+
+uses codejam.SolutionRunner
+
+uses java.io.BufferedReader
+uses java.io.StringReader
+uses java.lang.Double
+uses java.lang.Math
+uses java.lang.String
+uses java.util.List
 
 // Solution to Google Codejam 2012 Round 1B Problem A.
 
-class Solver extends BaseSolver {
+function solve(scores : List<Double>) : String {
+  scores.remove(0) // number of contestants
 
-  override function solveOneCase(reader : BufferedReader) : String {
-    var problem = reader.readLine()
-    var solution = "Solution for ${problem}"    // solution goes here.
-    return solution
+  var totalJudgePoints = scores.sum()
+  var totalAudiencePoints = totalJudgePoints
+  var averageFinalScore = (totalAudiencePoints + totalJudgePoints) / scores.size()
+
+  var scoresInDanger = scores.where(\ score -> score < averageFinalScore)
+  var cutoffScore = (scoresInDanger.sum() + totalAudiencePoints) / scoresInDanger.size()
+
+  var percentNeeded : List<Double> = {}
+  for (score in scores index i) {
+    percentNeeded.add(Math.max(0.0, 100.0 * (cutoffScore - score) / totalAudiencePoints))
   }
-
+  return percentNeeded.join(" ")
 }
 
 var sampleInput = new StringReader({
-    "3",
-    "1",
-    "2",
-    "3",
+    "4",
+    "2 20 10",
+    "2 10 0",
+    "4 25 25 25 25",
+    "3 24 30 21",
     ""}.join("\n"))
 
-var solver = new Solver()
+var runner = SolutionRunner.from(\ reader -> {
+    var values = reader.readLine().split(" ").toList()
+    return solve(values.subList(1, values.size()).map( \ s -> s.toDouble()))
+})
 
-//solver.tryOneCase({"1 2 3"})
-solver.solveAll( sampleInput )
-//solver.pollDirectory(".", :prefix = "A")
+runner.solveOneCase({"3 0 0 10"})
+runner.solveOneCase({"9 66 0 67 67 1 0 1 0 66"})
+runner.solveAll( sampleInput )
+runner.pollDirectory(".", :prefix = "A")
 

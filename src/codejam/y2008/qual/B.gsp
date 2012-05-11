@@ -6,7 +6,7 @@ classpath "../../.."
 uses codejam.SolutionRunner
 uses java.io.BufferedReader
 uses java.io.StringReader
-uses java.util.List
+uses java.util.ArrayList
 
 enum Direction {
   A_TO_B,
@@ -18,18 +18,18 @@ class Trip {
   var _end : int as EndTime
   var _direction : Direction as Direction
   override function toString() : String {
-    return "${Direction}: ${StartTime}-${EndTime}"
+    return "${_direction}: ${_start}-${_end}"
   }
 }
 
-function solve(turnaroundTime : int, trips : List<Trip>) : String {
+function solve(turnaroundTime : int, trips : ArrayList<Trip>) : String {
   trips.sortBy( \ elt -> elt.StartTime )
-  var numTrainsThatStartedAtA = 0
-  var numTrainsThatStartedAtB = 0
+  var numTrainsThatStartedAtA : int = 0
+  var numTrainsThatStartedAtB : int = 0
 
-  var tripsEnRoute : List<Trip> = {}
-  var readyToLeaveFromA = 0
-  var readyToLeaveFromB = 0
+  var tripsEnRoute = new ArrayList<Trip>()
+  var readyToLeaveFromA : int = 0
+  var readyToLeaveFromB : int = 0
 
   for (tripToSchedule in trips) {
     var departureTime = tripToSchedule.StartTime
@@ -37,7 +37,7 @@ function solve(turnaroundTime : int, trips : List<Trip>) : String {
     // Find out which trains have arrived
     for (tripEnRoute in tripsEnRoute iterator tripEnRouteIterator) {
       if (tripEnRoute.EndTime + turnaroundTime <= departureTime) {
-        if (tripEnRoute.Direction == A_TO_B) {
+        if (tripEnRoute.Direction == Direction.A_TO_B) {
           readyToLeaveFromB += 1
         } else {
           readyToLeaveFromA += 1
@@ -47,7 +47,7 @@ function solve(turnaroundTime : int, trips : List<Trip>) : String {
     }
 
     // If a train is ready, use it, else add one to the trains that originally started at the station
-    if (tripToSchedule.Direction == A_TO_B) {
+    if (tripToSchedule.Direction == Direction.A_TO_B) {
       if (readyToLeaveFromA < 1) {
         numTrainsThatStartedAtA += 1
       } else {
@@ -76,15 +76,15 @@ var runner = SolutionRunner.from( \ reader -> {
     var numTrips = reader.readLine().split(" ").map(\ s -> s.toInt())
     var numTripsFromAToB = numTrips[0]
     var numTripsFromBToA = numTrips[1]
-    var trips : List<Trip> = {}
+    var trips = new ArrayList<Trip>()
     for (var _ in 0..|numTripsFromAToB) {
       var times = reader.readLine().split(" ").map( stringToTime )
-      var tripFromAToB = new Trip() { :StartTime = times[0], :EndTime = times[1], :Direction = A_TO_B }
+      var tripFromAToB = new Trip() { :StartTime = times[0], :EndTime = times[1], :Direction = Direction.A_TO_B }
       trips.add(tripFromAToB)
     }
     for (var _ in 0..|numTripsFromBToA) {
       var times = reader.readLine().split(" ").map( stringToTime )
-      var tripFromBToA = new Trip() { :StartTime = times[0], :EndTime = times[1], :Direction = B_TO_A }
+      var tripFromBToA = new Trip() { :StartTime = times[0], :EndTime = times[1], :Direction = Direction.B_TO_A }
       trips.add(tripFromBToA)
     }
     return solve(turnaroundTimeInMinutes, trips)

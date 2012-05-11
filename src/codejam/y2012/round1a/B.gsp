@@ -1,9 +1,9 @@
 classpath "../../.."
 
-uses codejam.BaseSolver
+uses codejam.SolutionRunner
 
-uses java.io.*
-uses java.lang.*
+uses java.io.BufferedReader
+uses java.io.StringReader
 uses java.util.*
 
 // Solution to http://code.google.com/codejam/contest/1645485/dashboard#s=p1
@@ -32,46 +32,42 @@ class Level {
 }
 
 
-class Solver extends BaseSolver {
+function solve(reader : BufferedReader) : String {
+  var numLevels = reader.readLine().toInt()
+  var levels = (0..|numLevels).map(\ id -> new Level(id, reader.readLine()))
+  //print("Levels:")
+  //for (level in levels) { print("    ${level}") }
 
-  override function solveOneCase(reader : BufferedReader) : String {
-    var numLevels = reader.readLine().toInt()
-    var levels = (0..|numLevels).map(\ id -> new Level(id, reader.readLine()))
-    //print("Levels:")
-    //for (level in levels) { print("    ${level}") }
+  var canPlayForTwoStars = new LinkedList<Level>(levels.toList().sortBy( \ level -> level.NeededForTwoStars))
+  var canPlayForOneStar = levels.toSet()
 
-    var canPlayForTwoStars = new LinkedList<Level>(levels.toList().sortBy( \ level -> level.NeededForTwoStars))
-    var canPlayForOneStar = levels.toSet()
+  var starsEarned = 0
+  var levelsPlayed = 0
 
-    var starsEarned = 0
-    var levelsPlayed = 0
-
-    while (!canPlayForTwoStars.Empty) {
-      if (canPlayForTwoStars.get(0).NeededForTwoStars <= starsEarned) {
-        var level = canPlayForTwoStars.remove(0)
-        levelsPlayed++
-        if (canPlayForOneStar.remove(level)) {
-          starsEarned += 2
-          //print("Played level ${level} for both stars [Played ${levelsPlayed}, Earned ${starsEarned}]")
-        } else {
-          starsEarned += 1
-          //print("Played level ${level} for second star [Played ${levelsPlayed}, Earned ${starsEarned}]")
-        }
-        continue
-      }
-      var level = canPlayForOneStar.where( \ elt -> elt.NeededForOneStar <= starsEarned ).maxBy( \ elt -> elt.NeededForTwoStars)
-      if (level == null) {
-        return "Too Bad"
-      }
-      canPlayForOneStar.remove(level)
+  while (!canPlayForTwoStars.Empty) {
+    if (canPlayForTwoStars.get(0).NeededForTwoStars <= starsEarned) {
+      var level = canPlayForTwoStars.remove(0)
       levelsPlayed++
-      starsEarned += 1
-      //print("Played level ${level} for first star [Played ${levelsPlayed}, Earned ${starsEarned}]")
+      if (canPlayForOneStar.remove(level)) {
+        starsEarned += 2
+        //print("Played level ${level} for both stars [Played ${levelsPlayed}, Earned ${starsEarned}]")
+      } else {
+        starsEarned += 1
+        //print("Played level ${level} for second star [Played ${levelsPlayed}, Earned ${starsEarned}]")
+      }
+      continue
     }
-
-    return "${levelsPlayed}"
+    var level = canPlayForOneStar.where( \ elt -> elt.NeededForOneStar <= starsEarned ).maxBy( \ elt -> elt.NeededForTwoStars)
+    if (level == null) {
+      return "Too Bad"
+    }
+    canPlayForOneStar.remove(level)
+    levelsPlayed++
+    starsEarned += 1
+    //print("Played level ${level} for first star [Played ${levelsPlayed}, Earned ${starsEarned}]")
   }
 
+  return "${levelsPlayed}"
 }
 
 
@@ -94,11 +90,10 @@ var sampleInput = new StringReader({
     "5 6",
     ""}.join("\n"))
 
-var solver = new Solver()
+var runner = SolutionRunner.from(\ x -> solve(x))
 
-// solver.tryOneCase({"2 5", "0.6 0.6"})
-
-solver.solveAll( sampleInput )
-solver.pollDirectory(".", :prefix = "B")
+runner.solveOneCase({"2 5", "0.6 0.6"})
+runner.solveAll( sampleInput )
+//runner.pollDirectory(".", :prefix = "B")
 
 

@@ -47,12 +47,12 @@ function solve(final flies : List<Fly>) : String {
       return result
     }
     if (averageDistanceAt(lo, flies) <= averageDistanceAt(mid, flies)) {
-      hi = mid
-    } else if (averageDistanceAt(hi, flies) <= averageDistanceAt(mid, flies)) {
-      lo = mid
-    } else {
-      lo = (mid + lo) / 2.0
       hi = (mid + hi) / 2.0
+    } else if (averageDistanceAt(hi, flies) <= averageDistanceAt(mid, flies)) {
+      lo = (mid + lo) / 2.0
+    } else {
+      lo = (mid + 2.0 * lo) / 3.0
+      hi = (mid + 2.0 * hi) / 3.0
     }
   }
   throw new AssertionError("Shouldn't get to this line")
@@ -90,6 +90,6 @@ var sampleInput = {
 }.join("\n")
 
 
-solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
+//solveAll(new StringReader(sampleInput), new OutputStreamWriter(System.out))
 //solveAll(new FileReader("B-small-practice.in"), new FileWriter("B-small-practice.out"))
-//solveAll(new FileReader("B-large-practice.in"), new FileWriter("B-large-practice.out"))
+solveAll(new FileReader("B-large-practice.in"), new FileWriter("B-large-practice.out"))
