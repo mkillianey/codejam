@@ -1,3 +1,4 @@
+// Solution for "Round 1A 2011 Problem C: Pseudominion":
 // Solution for http://code.google.com/codejam/contest/1145485/dashboard#s=p2
 
 uses java.io.BufferedInputStream

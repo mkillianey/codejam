@@ -1,5 +1,3 @@
-classpath "../../.."
-
 // Solution for Google code jam 2008 Qualification Round Problem A: Saving the Universe
 // http://code.google.com/codejam/contest/32013/dashboard#s=p0
 
