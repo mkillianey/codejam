@@ -3,6 +3,8 @@ classpath "../../.."
 // Source for support files located at: https://github.com/mkillianey/codejam
 
 uses codejam.SolutionRunner
+uses codejam.Solver
+uses java.io.BufferedReader
 uses java.io.StringReader
 uses java.lang.Integer
 uses java.lang.RuntimeException
@@ -15,14 +17,15 @@ uses java.util.Set
 // Solution to Google Codejam 2012 Round 1C Problem A. Diamond Inheritance
 // http://code.google.com/codejam/contest/1781488/dashboard#s=p0
 
-class DiamondException extends RuntimeException {}
+class DiamondException extends RuntimeException {
+}
 
 function calcTransitiveSuperClassesOf(i : Integer,
                                       immediate : Map<Integer, Set<Integer>>,
                                       transitive : Map<Integer, Set<Integer>>) : Set<Integer> {
   var subClasses = transitive.get(i)
   if (subClasses == null) {
-    subClasses = new HashSet<Integer>(immediate.get(i))
+    subClasses = immediate.get(i).copy()
     for (j in immediate.get(i)) {
       for (k in calcTransitiveSuperClassesOf(j, immediate, transitive)) {
         if (!subClasses.add(k)) {
@@ -38,10 +41,11 @@ function calcTransitiveSuperClassesOf(i : Integer,
   return subClasses
 }
 
-function solve(immediateSubClasses : Map<Integer, Set<Integer>>) : String {
+function solve(immediateSuperClasses : Map<Integer, Set<Integer>>) : String {
   try {
-    for (i in 1..immediateSubClasses.size()) {
-      calcTransitiveSuperClassesOf(i, immediateSubClasses, new HashMap<Integer, Set<Integer>>())
+    var transitive : Map<Integer, Set<Integer>> = {}
+    for (i in 1..immediateSuperClasses.size()) {
+      calcTransitiveSuperClassesOf(i, immediateSuperClasses, transitive)
     }
   } catch (d : DiamondException) {
     return "Yes"
@@ -68,7 +72,7 @@ var sampleInput = new StringReader({
     "0",
     ""}.join("\n"))
 
-var runner = SolutionRunner.from(\ reader -> {
+var runner = SolutionRunner.from(\ reader : BufferedReader -> {
   var numClasses = reader.readLine().toInt()
   var immediateSubClasses : Map<Integer, Set<Integer>> = new HashMap<Integer, Set<Integer>>()
   for (i in 1..numClasses) {

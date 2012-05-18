@@ -25,9 +25,9 @@ uses java.util.concurrent.FutureTask
 public class SolutionRunner {
 
   var _newLine : String
-  var _solver : block(reader : BufferedReader) : String
+  var _solver : Solver
 
-  private construct(solver : block(reader : BufferedReader) : String) {
+  private construct(solver : Solver) {
     this._newLine = System.getProperty("line.separator")
     this._solver = solver
   }
@@ -35,10 +35,10 @@ public class SolutionRunner {
   /**
    * Creates a new SolutionRunner from the given solver.
    */
-  static public function from(solver : block(reader : BufferedReader) : String) : SolutionRunner {
+  static public function from(solver : Solver) : SolutionRunner {
     return new SolutionRunner(solver)
   }
-  
+
   /**
    * A helper method to make it easier to manually test/debug single cases.
   */
@@ -48,7 +48,7 @@ public class SolutionRunner {
       print("    ${line}")
     }
     var startTime = System.currentTimeMillis()
-    var solution = _solver(new BufferedReader(new StringReader(lines.join("\n"))))
+    var solution = _solver.solve(new BufferedReader(new StringReader(lines.join("\n"))))
     var endTime = System.currentTimeMillis()
     print("Gives this output in ${endTime-startTime} milliseconds:")
     print("    ${solution}")
@@ -65,7 +65,7 @@ public class SolutionRunner {
     var totalElapsedTime = 0L
     while (i <= numCases) {
       var startTime = System.currentTimeMillis()
-      var solution = _solver(bufferedReader)
+      var solution = _solver.solve(bufferedReader)
       var endTime = System.currentTimeMillis()
       var elapsedTime = endTime - startTime
       print("Case #${i} (${elapsedTime} milliseconds): ${solution}")
