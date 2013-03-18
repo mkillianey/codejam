@@ -3,7 +3,7 @@ package codejam.practice
 // Solution for Google code jam Practice Problems Problem A: Alien Numbers
 // https://code.google.com/codejam/contest/32003/dashboard#s=p0
 
-object AppA extends App {
+object AlienNumbers extends App {
 
   def solveCase(lines : Iterator[String]) : String = {
     val pieces = lines.next().split(" ").map(_.trim)
@@ -40,29 +40,29 @@ object AppA extends App {
 
 import org.scalatest.FunSuite
 
-class ASpec extends FunSuite {
+class AlienNumbersSpec extends FunSuite {
 
   test("input1") {
     val input = """9 0123456789 oF8""".stripMargin.lines
-    val output = AppA.solveCase(input)
+    val output = AlienNumbers.solveCase(input)
     assert(output === "Foo")
   }
 
   test("input2") {
     val input = """Foo oF8 0123456789""".stripMargin.lines
-    val output = AppA.solveCase(input)
+    val output = AlienNumbers.solveCase(input)
     assert(output === "9")
   }
 
   test("input3") {
     val input = """13 0123456789abcdef 01""".stripMargin.lines
-    val output = AppA.solveCase(input)
+    val output = AlienNumbers.solveCase(input)
     assert(output === "10011")
   }
 
   test("input4") {
     val input = """CODE O!CDE? A?JM!.""".stripMargin.lines
-    val output = AppA.solveCase(input)
+    val output = AlienNumbers.solveCase(input)
     assert(output === "JAM!")
   }
 
