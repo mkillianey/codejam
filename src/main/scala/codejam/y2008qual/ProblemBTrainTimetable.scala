@@ -1,12 +1,11 @@
 package codejam.y2008qual
 
-import io.Source
-import java.io.{File, FileOutputStream, PrintStream}
+import java.io.File
 
 // Solution for Google code jam 2008 Qualification Round Problem B. Train Timetable
 // http://code.google.com/codejam/contest/32013/dashboard#s=p1
 
-object AppB {
+object AppB extends App {
 
   abstract class Trip (val start : Int, val end : Int)
   case class AtoB (override val start : Int, override val end : Int) extends Trip(start, end)
@@ -69,10 +68,7 @@ object AppB {
     s"${numTrainsThatStartedAtA} ${numTrainsThatStartedAtB}"
   }
 
-  def main(args : Array[String]) {
-    val runner = new codejam.SolverRunner(solveCase)
-    runner.pollDirectory(new File("."))
-  }
+  new codejam.SolverRunner(solveCase).pollDirectory(".")
 }
 
 // Tests

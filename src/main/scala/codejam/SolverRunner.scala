@@ -22,7 +22,7 @@ class SolverRunner(val solveCase : Iterator[String] => String) {
     log(s"Finished ${n} cases in ${total} millisec")
   }
 
-  def using[A <: { def close() }, B](resource: A) (block: A => B) {
+  def using[A <: { def close() }, B](resource: A) (block: A => B) : B = {
     try {
       block(resource)
     } finally {
@@ -30,13 +30,14 @@ class SolverRunner(val solveCase : Iterator[String] => String) {
     }
   }
 
-  def pollDirectory(d : File) {
-    val matcher =  (f : File) => f.getName.endsWith(".in")
-    val outMaker = (f : File) => new File(f.getParentFile, f.getName.replace(".in", ".out"))
-    pollDirectory(d, matcher, outMaker)
-  }
+  def pollDirectory(path : String) : Unit =
+    pollDirectory(new File(path),
+      (f : File) => f.getName.endsWith(".in"),
+      (f : File) => new File(f.getParentFile, f.getName.replace(".in", ".out")))
 
-  def pollDirectory(dir : File, matcher : File => Boolean, outMaker : File => File) {
+  def pollDirectory(dir : File,
+                    matcher : File => Boolean,
+                    outMaker : File => File) : Unit = {
     val sleepForMillis = 1000
     if (!dir.exists) {
       log(s"Directory ${dir} does not exist")

@@ -1,12 +1,9 @@
 package codejam.y2008qual
 
-import io.Source
-import java.io.{File, FileOutputStream, PrintStream}
-
 // Solution for Google code jam 2008 Qualification Round Problem A: Saving the Universe
 // http://code.google.com/codejam/contest/32013/dashboard#s=p0
 
-object AppA {
+object AppA extends App {
 
   def solveCase(lines : Iterator[String]) : String = {
     val S = lines.next().toInt
@@ -22,10 +19,7 @@ object AppA {
     switches.values.min.toString
   }
 
-  def main(args : Array[String]) {
-    val runner = new codejam.SolverRunner(solveCase)
-    runner.pollDirectory(new File("."))
-  }
+  new codejam.SolverRunner(solveCase).pollDirectory(".")
 }
 
 // Tests
