@@ -1,12 +1,12 @@
 package codejam.y2008qual
 
 import io.Source
-import java.io.{FileOutputStream, PrintStream}
+import java.io.{File, FileOutputStream, PrintStream}
 
 // Solution for Google code jam 2008 Qualification Round Problem B. Train Timetable
 // http://code.google.com/codejam/contest/32013/dashboard#s=p1
 
-object AppB extends App {
+object AppB {
 
   abstract class Trip (val start : Int, val end : Int)
   case class AtoB (override val start : Int, override val end : Int) extends Trip(start, end)
@@ -16,12 +16,13 @@ object AppB extends App {
     println(msg)
   }
   
-  def timeToMinutes(s : String) = {
-    val pieces = s.split(":").map(_.toInt)
-    pieces(0) * 60 + pieces(1)
-  }
+  def solveCase(lines : Iterator[String]) : String = {
 
-  def solveCase(lines : Iterator[String]) = {
+    def timeToMinutes(s : String) = {
+      val pieces = s.split(":").map(_.toInt)
+      pieces(0) * 60 + pieces(1)
+    }
+
     val turnaroundTime = lines.next().toInt
     val Array(na, nb) = lines.next().split(" ").map(_.toInt)
 
@@ -68,19 +69,10 @@ object AppB extends App {
     s"${numTrainsThatStartedAtA} ${numTrainsThatStartedAtB}"
   }
 
-  def solveAll(lines : Iterator[String], out : PrintStream) {
-    val N = lines.next().toInt
-    for (i <- 1 to N) {
-      val answer = solveCase(lines)
-      out.println(s"Case #${i}: ${answer}")
-      out.flush()
-    }
+  def main(args : Array[String]) {
+    val runner = new codejam.SolverRunner(solveCase)
+    runner.pollDirectory(new File("."))
   }
-
-  // solveAll(Source.stdin.getLines, Console.out)
-  solveAll(
-    Source.fromFile("src/main/resources/codejam/y2008qual/B-large-practice.in").getLines,
-    new PrintStream(new FileOutputStream("B.out")))
 }
 
 // Tests
