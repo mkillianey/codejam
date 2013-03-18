@@ -1,7 +1,5 @@
 package codejam.y2008qual
 
-import java.io.File
-
 // Solution for Google code jam 2008 Qualification Round Problem B. Train Timetable
 // http://code.google.com/codejam/contest/32013/dashboard#s=p1
 
