@@ -3,14 +3,14 @@ package codejam.y2008qual
 // Solution for Google code jam 2008 Qualification Round Problem B. Train Timetable
 // http://code.google.com/codejam/contest/32013/dashboard#s=p1
 
-object AppB extends App {
+object TrainTimetable {
 
   abstract class Trip (val start : Int, val end : Int)
   case class AtoB (override val start : Int, override val end : Int) extends Trip(start, end)
   case class BtoA (override val start : Int, override val end : Int) extends Trip(start, end)
 
   def log(msg : => String) {
-    println(msg)
+    //println(msg)
   }
   
   def solveCase(lines : Iterator[String]) : String = {
@@ -66,34 +66,23 @@ object AppB extends App {
     s"${numTrainsThatStartedAtA} ${numTrainsThatStartedAtB}"
   }
 
-  new codejam.SolverRunner(solveCase).pollDirectory(".")
+  def main(args : Array[String]) {
+    val runner = new codejam.SolverRunner(solveCase)
+    runner.testSamples(
+      """2
+        |5
+        |3 2
+        |09:00 12:00
+        |10:00 13:00
+        |11:00 12:30
+        |12:02 15:00
+        |09:00 10:30
+        |2
+        |2 0
+        |09:00 09:01
+        |12:00 12:02""".stripMargin.lines,
+      """Case #1: 2 2
+        |Case #2: 2 0""".stripMargin.lines)
+    runner.pollDirectory(".")
 }
-
-// Tests
-
-import org.scalatest.FunSuite
-
-class BSpec extends FunSuite {
-
-  test("input1") {
-    val input = """5
-                  |3 2
-                  |09:00 12:00
-                  |10:00 13:00
-                  |11:00 12:30
-                  |12:02 15:00
-                  |09:00 10:30""".stripMargin.lines
-    val output = AppB.solveCase(input)
-    assert (output === "2 2")
-  }
-
-  test("input2") {
-    val input = """2
-                  |2 0
-                  |09:00 09:01
-                  |12:00 12:02""".stripMargin.lines
-    val output = AppB.solveCase(input)
-    assert (output === "2 0")
-  }
-
 }

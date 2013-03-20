@@ -1,9 +1,10 @@
-package codejam.practice
+package codejam
+package practice
 
 // Solution for Google code jam Practice Problems Problem A: Alien Numbers
 // https://code.google.com/codejam/contest/32003/dashboard#s=p0
 
-object AlienNumbers extends App {
+object AlienNumbers {
 
   def solveCase(lines : Iterator[String]) : String = {
     val pieces = lines.next().split(" ").map(_.trim)
@@ -17,7 +18,7 @@ object AlienNumbers extends App {
     val toLang = (0 until toBase).zip(toDigits).toMap
 
     def decode(chs : Iterator[Char], accumulator : Int) : Int = {
-      if (chs.hasNext) decode(chs, accumulator * fromBase + fromLang(chs.next))
+      if (chs.hasNext) decode(chs, accumulator * fromBase + fromLang(chs.next()))
       else accumulator
     }
 
@@ -28,42 +29,24 @@ object AlienNumbers extends App {
         encode(d, sb)
       sb.append(toLang(m))
     }
-
-    val num = decode(pieces(0).toCharArray.iterator, 0)
-    encode(num, new StringBuilder).toString
+    val encodedNumber = pieces(0).toCharArray
+    val num = decode(encodedNumber.iterator, 0)
+    encode(num, new StringBuilder).toString()
   }
 
-  new codejam.SolverRunner(solveCase).pollDirectory(".")
-}
-
-// Tests
-
-import org.scalatest.FunSuite
-
-class AlienNumbersSpec extends FunSuite {
-
-  test("input1") {
-    val input = """9 0123456789 oF8""".stripMargin.lines
-    val output = AlienNumbers.solveCase(input)
-    assert(output === "Foo")
+  def main(args: Array[String]) {
+    val runner = new SolverRunner(solveCase)
+    runner.testSamples(
+        """4
+          |9 0123456789 oF8
+          |Foo oF8 0123456789
+          |13 0123456789abcdef 01
+          |CODE O!CDE? A?JM!.""".stripMargin.lines,
+        """Case #1: Foo
+          |Case #2: 9
+          |Case #3: 10011
+          |Case #4: JAM!""".stripMargin.lines
+    )
+    runner.pollDirectory(".")
   }
-
-  test("input2") {
-    val input = """Foo oF8 0123456789""".stripMargin.lines
-    val output = AlienNumbers.solveCase(input)
-    assert(output === "9")
-  }
-
-  test("input3") {
-    val input = """13 0123456789abcdef 01""".stripMargin.lines
-    val output = AlienNumbers.solveCase(input)
-    assert(output === "10011")
-  }
-
-  test("input4") {
-    val input = """CODE O!CDE? A?JM!.""".stripMargin.lines
-    val output = AlienNumbers.solveCase(input)
-    assert(output === "JAM!")
-  }
-
 }
