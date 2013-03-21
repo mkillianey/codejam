@@ -1,6 +1,9 @@
 .*
 out
+target
 *~
 *.in
 *.out
+*.iml
+*.ipr
 
