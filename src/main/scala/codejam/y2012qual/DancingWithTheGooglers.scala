@@ -1,8 +1,6 @@
 package codejam
 package y2012qual
 
-import com.sun.org.apache.xpath.internal.functions.FuncFalse
-
 // Solution for Google code jam 2012 Qualification Round Problem B: Dancing With the Googlers
 // https://code.google.com/codejam/contest/1460488/dashboard#s=p1
 
@@ -13,7 +11,7 @@ object DancingWithTheGooglers {
   }
 
   def solveCase(lines : Iterator[String]) = {
-    val line = lines.next.split(" ").map(_.toInt)
+    val line = lines.next().split(" ").map(_.toInt)
     val Array(_, numSurprisingScores, p) = line.take(3)
     val scores = line.drop(3)
 
