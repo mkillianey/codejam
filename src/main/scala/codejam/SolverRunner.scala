@@ -9,6 +9,13 @@ class SolverRunner(val solveCase : Iterator[String] => String) {
     println(msg)
   }
 
+  def timeCase(name : String, lines : Iterator[String]) {
+    val start = System.currentTimeMillis()
+    val answer = solveCase(lines)
+    val elapsedTime = System.currentTimeMillis() - start
+    log(s"Solved $name in $elapsedTime millisec:  $answer")
+  }
+
   def solveAll(lines : Iterator[String], writeln : String => Unit) {
     val n = lines.next().toInt
     val total = (1 to n).map(i => {
