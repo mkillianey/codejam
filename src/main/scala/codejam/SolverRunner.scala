@@ -5,7 +5,7 @@ import java.io.{FileWriter, File, PrintWriter}
 
 class SolverRunner(val solveCase : Iterator[String] => String) {
 
-  def log(msg : => String) {
+  def log(msg : => Any) {
     println(msg)
   }
 
@@ -16,19 +16,20 @@ class SolverRunner(val solveCase : Iterator[String] => String) {
     log(s"Solved $name in $elapsedTime millisec:  $answer")
   }
 
-  def solveAll(lines : Iterator[String], writeln : String => Unit) {
+  def solveAll[T >: String](lines : Iterator[String], writeln : T => Any = log _) {
     val n = lines.next().toInt
     val total = (1 to n).map(i => {
       val start = System.currentTimeMillis()
       val answer = solveCase(lines)
       val elapsedTime = System.currentTimeMillis() - start
       writeln(s"Case #$i: $answer")
-      log(s"Solved case #$i in $elapsedTime millisec")
+      log(s"Solved case #$i in $elapsedTime millisec [answer: ${answer}]")
       elapsedTime
     }).sum
     log(s"Finished $n cases in $total millisec")
   }
 
+  import scala.language.reflectiveCalls
   def using[A <: { def close() }, B](resource: A) (block: A => B) : B = {
     try {
       block(resource)
@@ -63,7 +64,7 @@ class SolverRunner(val solveCase : Iterator[String] => String) {
             val lines = Source.fromFile(inputFile).getLines()
             using(new PrintWriter(new FileWriter(outputFile))) { writer =>
               log(s"Writing ${inputFile.getName} to ${outputFile.getName}")
-              solveAll(lines, writer.println(_))
+              solveAll(lines, (s : String) => writer.println(s))
               log(s"Done writing ${outputFile.getName}")
             }
           }
@@ -74,7 +75,7 @@ class SolverRunner(val solveCase : Iterator[String] => String) {
 
   def testSamples(input : Iterator[String], expectedLines : Iterator[String]) {
     val actualBuffer = new collection.mutable.ArrayBuffer[String]()
-    solveAll(input, s => { actualBuffer.appendAll(s.lines) ; log(s) } )
+    solveAll(input, (s : String) => { actualBuffer.appendAll(s.lines) ; log(s) } )
     val actual = actualBuffer.toArray
     val expected = expectedLines.toArray
     val errors = expected.zip(actual).filter(p => (p._1 != p._2))

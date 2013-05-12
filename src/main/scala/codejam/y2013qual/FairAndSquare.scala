@@ -70,7 +70,7 @@ object FairAndSquare {
         |Case #3: 2""".stripMargin.lines
     )
     val powersOfTen = "100" :: (1 to 100).toList.map { i => s"1 1${new Array[Int](i).mkString}" }
-    runner.solveAll(powersOfTen.iterator, print)
+    runner.solveAll(powersOfTen.iterator, print _)
 
     runner.pollDirectory(".")
   }
